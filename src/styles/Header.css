@@ -1,13 +1,66 @@
 header {
-    position: fixed;
     left: 0;
     top: 0;
     right: 0;
+    padding-bottom: 0;
+    background-color: #efd9b4;
+    color: #292522;
     display: flex;
     flex-direction: column;
 }
 
 nav {
+    padding: 20px;
     display: flex;
     justify-content: space-between;
+}
+
+button {
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+}
+
+.website-title {
+    margin: 0;
+    /* color: #fa6900; */
+}
+
+.themes-btn {
+    background-color: white;
+}
+
+.field-tabs {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+
+.field-tab {
+    margin-inline: 2px;
+    border-bottom: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+.field-title {
+    margin: 5px 0 0 0;
+}
+
+.del-btn, .add-btn {
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+}
+
+.del-btn:hover,
+.add-btn:hover {
+    background-color: #4d6160;
 }
