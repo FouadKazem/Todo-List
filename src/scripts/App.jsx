@@ -4,11 +4,18 @@ import Header from './components/Header'
 import Main from './components/Main'
 
 function App() {
-    const [fields, setFields] = React.useState({
-        fieldsArray: [],
-        activeFieldId: null,
+    // The 'fields' state will search the local storage to retrive the data,
+    // If there are no such data in the local storage it will assign the
+    // object next to the or operator.
+    const [fields, setFields] = React.useState(() => {
+        return JSON.parse(localStorage.getItem('fields')) || { fieldsArray: [], activeFieldId: null }
     })
 
+    // Side effect will only run if the fields object changed, it saves the
+    // current fields data to the local storage.
+    React.useEffect(() => localStorage.setItem('fields', JSON.stringify(fields)), [fields])
+
+    // Event handler will create new field and add it to the end of array.
     function addField() {
         setFields(prevFields => {
             const newFieldId = nanoid()
@@ -18,7 +25,7 @@ function App() {
                     ...prevFields.fieldsArray,
                     {
                         fieldId: newFieldId,
-                        fieldTitle: `Title ${prevFields.fieldsArray.length + 1}`,
+                        fieldTitle: `Field ${prevFields.fieldsArray.length + 1}`,
                         fieldTasks: []
                     }
                 ]
@@ -26,6 +33,8 @@ function App() {
         })
     }
 
+    // Event handler will delete the field which its id matches with the 
+    // 'id' parameter and update the active field status if needed.
     function deleteField(id) {
         setFields(prevFields => {
             let newFields = {
@@ -58,6 +67,8 @@ function App() {
         })
     }
 
+    // Event handler will switch the field which its id matches with the 
+    // 'id' parameter to an active field.
     function switchField(id) {
         setFields(prevFields => {
             return {
@@ -70,7 +81,7 @@ function App() {
     return (
         <React.Fragment>
             <Header fields={fields} addField={addField} deleteField={deleteField} switchField={switchField} />
-            <Main />
+            <Main fields={fields} addField={addField} />
         </React.Fragment>
     )
 }
