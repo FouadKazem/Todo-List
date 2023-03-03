@@ -6,7 +6,7 @@ module.exports = {
     entry: './src/scripts/index.js',
     output: {
         filename: 'index.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'test'),
         assetModuleFilename: 'assets/[hash][ext][query]',
     },
     module: {
@@ -46,7 +46,7 @@ module.exports = {
     ],
     devServer: {
         static: {
-            directory: path.resolve(__dirname, 'dist')
+            directory: path.resolve(__dirname, 'test')
         }, 
         port: 3000,
         open: true,
