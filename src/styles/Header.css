@@ -4,7 +4,6 @@ header {
     right: 0;
     padding-bottom: 0;
     background-color: #efd9b4;
-    color: #292522;
     display: flex;
     flex-direction: column;
 }
@@ -13,29 +12,40 @@ nav {
     padding: 20px;
     display: flex;
     justify-content: space-between;
-}
-
-button {
-    border: none;
-    padding: 0;
-    background: none;
-    cursor: pointer;
+    align-items: center;
 }
 
 .website-title {
-    margin: 0;
-    /* color: #fa6900; */
+    margin: 5px 0 0 0;
+    font-size: 3em;
+    user-select: none;
 }
 
 .themes-btn {
-    background-color: white;
-}
-
-.field-tabs {
+    border: 5px solid #292522;
+    border-radius: 35px;
+    padding: 2px;
+    width: 70px;
+    height: 35px;
+    cursor: pointer;
+    background-color: #a39081;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
 
+.themes-btn>svg {
+    border-radius: 100%;
+    height: 100%;
+    background-color: #292522;
+    stroke: #efd9b4;
+}
+
+.field-tabs {
+    overflow-x: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .field-tab {
@@ -43,24 +53,34 @@ button {
     border-bottom: none;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    padding: 5px 10px;
+    padding-right: 5px;
+    min-width: 200px;
+    max-width: 200px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 5px;
 }
 
 .field-title {
-    margin: 5px 0 0 0;
+    margin: 0;
+    padding: 10px 5px 5px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    user-select: none;
+    cursor: pointer;
 }
 
-.del-btn, .add-btn {
+.btn {
+    padding: 1px;
     border-radius: 100%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
+    flex-grow: 0;
+    flex-shrink: 0;
 }
 
-.del-btn:hover,
-.add-btn:hover {
+.btn:hover {
     background-color: #4d6160;
 }
