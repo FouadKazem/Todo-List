@@ -2,9 +2,8 @@
     margin: 20px 20px 0 20px;
     border-radius: 25px;
     padding: 20px;
-    /* overflow: scroll; */
-    background-color: #efd9b4;
-    color: #292522;
+    /* background-color: #efd9b4; */
+    /* color: #292522; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,7 +29,6 @@
     width: fit-content;
     display: grid;
     grid-template: auto / auto auto auto;
-    /* flex-wrap: wrap; */
     justify-content: flex-end;
     align-items: center;
 }

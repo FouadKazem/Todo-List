@@ -36,6 +36,54 @@ function App() {
         })
     }, [windowHeight, headerHeight])
 
+    // Side effect to handle the change of theme.
+    React.useEffect(() => {
+        const head = document.querySelector('head')
+        const oldThemeStyle = document.querySelector('.theme-style')
+        if (oldThemeStyle) {
+            head.removeChild(oldThemeStyle)
+        }
+        const themeStyle = document.createElement('style')
+        themeStyle.className = 'theme-style'
+        if (fields.theme == 'light') {
+            themeStyle.innerHTML = `
+                * { color: #292522; }
+                svg { stroke: #292522; }
+                header { background-color: #efd9b4; }
+                .themes-btn {border-color: #292522; background-color: #a39081; }
+                .themes-btn>svg { background-color: #292522; stroke: #efd9b4; }
+                .btn:hover { background-color: #4d6160; }
+                main { background-color: #a39081; }
+                .intro { background-color: #efd9b4; }
+                .field { background-color: #72655a; }
+                .task { background-color: #efd9b4; }
+                #main-add-field-btn, #main-add-task-btn { background-color: #d6a692; }
+                main>#main-add-task-btn { background-color: #efd9b4; }
+                #main-add-field-btn:hover, #main-add-task-btn:hover { background-color: #4d6160; }
+            `
+        }
+        else {
+            themeStyle.innerHTML = `
+                * { color: white; }
+                svg { stroke: white; }
+                header { background-color: #12122b; }
+                .themes-btn {border-color: white; background-color: #0d0d1e; }
+                .themes-btn>svg { background-color: white; stroke: #12122b; fill: #12122b; }
+                .btn:hover { background-color: #5e5e5e; }
+                .field-tab>button:hover { background-color: #101027; }
+                main { background-color: #2a2a40; }
+                .intro { background-color: #12122b; }
+                .field { background-color: #414155; }
+                .task { background-color: #12122b; }
+                #main-add-field-btn, #main-add-task-btn { background-color: #383845; }
+                #main-add-field-btn:hover, #main-add-task-btn:hover { background-color: #5e5e5e; }
+                main>#main-add-task-btn { background-color: #101027; }
+            `
+        }
+        themeStyle.innerHTML = themeStyle.innerHTML.split('').filter(char => char != ' ' && char != '\n').join('')
+        head.append(themeStyle)
+    }, [fields.theme])
+
     // Event handler will change the theme from light to dark and vice versa.
     function switchTheme() {
         setFields(prevFields => {

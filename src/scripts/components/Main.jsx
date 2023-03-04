@@ -24,7 +24,18 @@ function Main(props) {
     for (let i = 0; i < props.fields.fieldsArray.length; i++) {
         let field = props.fields.fieldsArray[i]
         if (field.fieldId == props.fields.activeFieldId) {
-            TasksElements = field.fieldTasks.map(task => <Task activeFieldId={props.fields.activeFieldId} task={task} checkTask={props.checkTask} editTaskDescription={props.editTaskDescription} deleteTask={props.deleteTask} />)
+            TasksElements = field.fieldTasks.map(task => {
+                return (
+                    <Task
+                        theme={props.fields.theme}
+                        activeFieldId={props.fields.activeFieldId}
+                        task={task}
+                        checkTask={props.checkTask}
+                        editTaskDescription={props.editTaskDescription}
+                        deleteTask={props.deleteTask}
+                    />
+                )
+            })
             break
         }
     }

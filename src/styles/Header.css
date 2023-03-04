@@ -3,7 +3,7 @@ header {
     top: 0;
     right: 0;
     padding-bottom: 0;
-    background-color: #efd9b4;
+    /* background-color: #efd9b4; */
     display: flex;
     flex-direction: column;
 }
@@ -22,7 +22,7 @@ nav {
 }
 
 .themes-btn {
-    border: 5px solid #292522;
+    border: 5px solid /* #292522 */;
     border-radius: 35px;
     padding: 2px;
     width: 70px;
@@ -37,8 +37,8 @@ nav {
 .themes-btn>svg {
     border-radius: 100%;
     height: 100%;
-    background-color: #292522;
-    stroke: #efd9b4;
+    /* background-color: #292522; */
+    /* stroke: #efd9b4; */
 }
 
 .field-tabs {
@@ -82,5 +82,5 @@ nav {
 }
 
 .btn:hover {
-    background-color: #4d6160;
+    /* background-color: #4d6160; */
 }

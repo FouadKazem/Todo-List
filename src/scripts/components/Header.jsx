@@ -21,7 +21,10 @@ function Header(props) {
 
     const fieldsTabElements = props.fields.fieldsArray.map(field => {
         let styles = {
-            backgroundColor: field.fieldId == props.fields.activeFieldId ? '#a39081' : '#d6a692'
+            backgroundColor: props.fields.theme == 'light' ? 
+            (field.fieldId == props.fields.activeFieldId ? '#a39081' : '#d6a692')
+            :
+            (field.fieldId == props.fields.activeFieldId ? '#2a2a40' : '#59596b')
         }
 
         return (
