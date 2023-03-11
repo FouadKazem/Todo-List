@@ -2,16 +2,17 @@ import React from 'react'
 import Task from './Task'
 
 function Main(props) {
-    const [startClientY, setStartClientY] = React.useState(0)
+    let startClientY = 0
 
     function startTouchField(event) {
-        setStartClientY(event.touches[0].clientY)
+        startClientY = event.touches[0].clientY
     }
 
     function moveTouchField(event) {
         document.querySelector('.field').scrollBy({
-            top: startClientY < event.touches[0].clientY ? -10 : 10,
+            top: startClientY - event.touches[0].clientY,
         })
+        startClientY = event.touches[0].clientY
     }
 
     function scrollField(event) {
