@@ -1,16 +1,17 @@
 import React from 'react'
 
 function Header(props) {
-    const [startClientX, setStartClientX] = React.useState(0)
+    let startClientX = 0
 
     function startTouchFieldTabs(event) {
-        setStartClientX(event.touches[0].clientX)
+        startClientX = event.touches[0].clientX
     }
 
     function moveTouchFieldTabs(event) {
         document.querySelector('.field-tabs').scrollBy({
-            left: startClientX < event.touches[0].clientX ? -10 : 10,
+            left: startClientX - event.touches[0].clientX,
         })
+        startClientX = event.touches[0].clientX
     }
 
     function scrollFieldTabs(event) {
