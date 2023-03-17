@@ -1,4 +1,5 @@
 import React from 'react'
+import Intro from './Intro'
 import Task from './Task'
 
 function Main(props) {
@@ -45,19 +46,23 @@ function Main(props) {
         <main style={props.mainStyles}>
             {
                 props.fields.activeFieldId == null ?
-                    <div className='intro'>
-                        <h1>Board is Empty! Press The Button Below to Add New Field</h1>
-                        <button onClick={props.addField} className='btn' id='main-add-field-btn'>ADD NEW FIELD</button>
-                    </div>
+                    <Intro
+                        message='Board is Empty! Press The Button Below to Add New Field'
+                        handleClick={props.addField}
+                        btnId='main-add-field-btn'
+                        btnMessage='ADD NEW FIELD'
+                    />
                     :
                     <React.Fragment>
                         <div onWheel={(event) => scrollField(event)} onTouchStart={event => startTouchField(event)} onTouchMove={event => moveTouchField(event)} className='field'>
                             {
                                 TasksElements.length == 0 ?
-                                    <div className='intro'>
-                                        <h1>Field is Empty! Press The Button Below to Add New Task</h1>
-                                        <button onClick={() => props.addTask(props.fields.activeFieldId)} className='btn' id='main-add-task-btn'>ADD NEW TASK</button>
-                                    </div>
+                                    <Intro
+                                        message='Field is Empty! Press The Button Below to Add New Task'
+                                        handleClick={() => props.addTask(props.fields.activeFieldId)}
+                                        btnId='main-add-task-btn'
+                                        btnMessage='ADD NEW TASK'
+                                    />
                                     :
                                     <React.Fragment>
                                         {TasksElements}
