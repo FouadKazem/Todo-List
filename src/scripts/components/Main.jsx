@@ -1,8 +1,19 @@
 import React from 'react'
 import Intro from './Intro'
 import Task from './Task'
+import { clientHeight } from '../utilities/common'
 
 function Main(props) {
+    const [mainStyles, setMainStyles] = React.useState({})
+
+    // Side effect to modify the main styles based on changing in the height of
+    // window and header heights states.
+    React.useEffect(() => {
+        setMainStyles({
+            height: `${window.innerHeight - document.querySelector('header').clientHeight}px`
+        })
+    }, [window.innerHeight, clientHeight('header')])
+
     let startClientY = 0
 
     function startTouchField(event) {
@@ -29,7 +40,7 @@ function Main(props) {
             TasksElements = field.fieldTasks.map(task => {
                 return (
                     <Task
-                        theme={props.fields.theme}
+                        theme={props.theme}
                         activeFieldId={props.fields.activeFieldId}
                         task={task}
                         checkTask={props.checkTask}
@@ -43,7 +54,7 @@ function Main(props) {
     }
 
     return (
-        <main style={props.mainStyles}>
+        <main style={mainStyles}>
             {
                 props.fields.activeFieldId == null ?
                     <Intro

@@ -8,33 +8,19 @@ function App() {
     // If there are no such data in the local storage it will assign the
     // object next to the or operator.
     const [fields, setFields] = React.useState(() => {
-        return JSON.parse(localStorage.getItem('fields')) || { fieldsArray: [], activeFieldId: null, theme: 'light' }
+        return JSON.parse(localStorage.getItem('fields')) || { fieldsArray: [], activeFieldId: null }
     })
-    const [windowHeight, setWindowHeight] = React.useState(0)
-    const [headerHeight, setHeaderHeight] = React.useState(0)
-    const [mainStyles, setMainStyles] = React.useState({})
+    // State to control the theme of the website.
+    const [theme, setTheme] = React.useState(() => localStorage.getItem('theme') || 'light')
+
+    // Side Effect to reshape the localStorage data.
+    React.useEffect(() => {
+        delete fields.theme
+    }, [])
 
     // Side effect will only run if the fields object changed, it saves the
     // current fields data to the local storage.
     React.useEffect(() => localStorage.setItem('fields', JSON.stringify(fields)), [fields])
-
-    // Side Effect to listen to change of the size of the window and the header.
-    React.useEffect(() => {
-        window.addEventListener('resize', () => {
-            setWindowHeight(window.innerHeight)
-        })
-        new ResizeObserver(() => {
-            setHeaderHeight(document.querySelector('header').clientHeight)
-        }).observe(document.querySelector('header'))
-    }, [])
-
-    // Side effect to modify the main styles based on changing in the height of
-    // window and header heights states.
-    React.useEffect(() => {
-        setMainStyles({
-            height: `${windowHeight - headerHeight}px`
-        })
-    }, [windowHeight, headerHeight])
 
     // Side effect to handle the change of theme.
     React.useEffect(() => {
@@ -45,7 +31,7 @@ function App() {
         }
         const themeStyle = document.createElement('style')
         themeStyle.className = 'theme-style'
-        if (fields.theme == 'light') {
+        if (theme == 'light') {
             themeStyle.innerHTML = `
                 * { color: #292522; }
                 svg { stroke: #292522; }
@@ -82,16 +68,12 @@ function App() {
         }
         themeStyle.innerHTML = themeStyle.innerHTML.split('').filter(char => char != ' ' && char != '\n').join('')
         head.append(themeStyle)
-    }, [fields.theme])
+        localStorage.setItem('theme', theme)
+    }, [theme])
 
     // Event handler will change the theme from light to dark and vice versa.
     function switchTheme() {
-        setFields(prevFields => {
-            return {
-                ...prevFields,
-                theme: prevFields.theme == 'light' ? 'dark' : 'light'
-            }
-        })
+        setTheme(prevTheme => prevTheme == 'light' ? 'dark' : 'light')
     }
 
     // Event handler will create new field and add it to the end of array.
@@ -298,6 +280,7 @@ function App() {
         <React.Fragment>
             <Header
                 fields={fields}
+                theme={theme}
                 switchTheme={switchTheme}
                 addField={addField}
                 deleteField={deleteField}
@@ -306,12 +289,12 @@ function App() {
             />
             <Main
                 fields={fields}
+                theme={theme}
                 addField={addField}
                 addTask={addTask}
                 checkTask={checkTask}
                 editTaskDescription={editTaskDescription}
                 deleteTask={deleteTask}
-                mainStyles={mainStyles}
             />
         </React.Fragment>
     )
