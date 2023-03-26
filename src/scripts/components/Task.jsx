@@ -1,6 +1,9 @@
 import React from 'react'
+import AppContext from '../context/AppContext'
 
 function Task(props) {
+    const appContext = React.useContext(AppContext)
+
     const userAgent = navigator.userAgent.toLowerCase()
     const controlBtnsStyle = {
         gridTemplate: userAgent.indexOf('android') != -1 || userAgent.indexOf('iphone') != -1 || userAgent.indexOf('ipad') != -1 ?
@@ -16,12 +19,12 @@ function Task(props) {
                 <button onClick={() => props.checkTask(props.activeFieldId, props.task.taskId)} title={`Mark task as ${!props.task.taskStatus ? 'Done' : 'Undone'}`}>
                     {
                         !props.task.taskStatus ?
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle" viewBox="0 0 24 24" strokeWidth="2" fill={props.theme == 'light' ? "#a39081" : "#383845"} strokeLinecap="round" strokeLinejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle" viewBox="0 0 24 24" strokeWidth="2" fill={appContext.theme == 'light' ? "#a39081" : "#383845"} strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <circle cx="12" cy="12" r="9" />
                             </svg>
                             :
-                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle-check" viewBox="0 0 24 24" strokeWidth="2" fill={props.theme == 'light' ? "#a39081" : "#383845"} strokeLinecap="round" strokeLinejoin="round">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle-check" viewBox="0 0 24 24" strokeWidth="2" fill={appContext.theme == 'light' ? "#a39081" : "#383845"} strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <circle cx="12" cy="12" r="9" />
                                 <path d="M9 12l2 2l4 -4" />

@@ -10,7 +10,7 @@ function Main(props) {
     // window and header heights states.
     React.useEffect(() => {
         setMainStyles({
-            height: `${window.innerHeight - document.querySelector('header').clientHeight}px`
+            height: `${window.innerHeight - clientHeight('header')}px`
         })
     }, [window.innerHeight, clientHeight('header')])
 
@@ -40,7 +40,6 @@ function Main(props) {
             TasksElements = field.fieldTasks.map(task => {
                 return (
                     <Task
-                        theme={props.theme}
                         activeFieldId={props.fields.activeFieldId}
                         task={task}
                         checkTask={props.checkTask}

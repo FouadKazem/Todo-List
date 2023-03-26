@@ -1,6 +1,9 @@
 import React from 'react'
+import AppContext from '../context/AppContext'
 
 function Header(props) {
+    const appContext = React.useContext(AppContext)
+
     let startClientX = 0
 
     function startTouchFieldTabs(event) {
@@ -22,7 +25,7 @@ function Header(props) {
 
     const fieldsTabElements = props.fields.fieldsArray.map(field => {
         let styles = {
-            backgroundColor: props.theme == 'light' ? 
+            backgroundColor: appContext.theme == 'light' ? 
             (field.fieldId == props.fields.activeFieldId ? '#a39081' : '#d6a692')
             :
             (field.fieldId == props.fields.activeFieldId ? '#2a2a40' : '#59596b')
@@ -56,7 +59,7 @@ function Header(props) {
         )
     })
     const themeBtnStyles = {
-        justifyContent: props.theme == 'light' ? 'flex-start' : 'flex-end'
+        justifyContent: appContext.theme == 'light' ? 'flex-start' : 'flex-end'
     }
 
     return (
@@ -65,7 +68,7 @@ function Header(props) {
                 <h1 className='website-title'>Todo List</h1>
                 <div style={themeBtnStyles} onClick={props.switchTheme} className='themes-btn'>
                     {
-                        props.theme == 'light' ?
+                        appContext.theme == 'light' ?
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-sun" viewBox="0 0 24 24" strokeWidth="2" stroke="#efd9b4" fill="none" strokeLinecap="round" strokeLinejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                 <circle cx="12" cy="12" r="4" />

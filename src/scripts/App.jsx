@@ -2,6 +2,7 @@ import React from 'react'
 import { nanoid } from 'nanoid'
 import Header from './components/Header'
 import Main from './components/Main'
+import AppContext from './context/AppContext'
 
 function App() {
     // The 'fields' state will search the local storage to retrive the data,
@@ -277,10 +278,9 @@ function App() {
     }
 
     return (
-        <React.Fragment>
+        <AppContext.Provider value={{ theme: theme }}>
             <Header
                 fields={fields}
-                theme={theme}
                 switchTheme={switchTheme}
                 addField={addField}
                 deleteField={deleteField}
@@ -289,14 +289,13 @@ function App() {
             />
             <Main
                 fields={fields}
-                theme={theme}
                 addField={addField}
                 addTask={addTask}
                 checkTask={checkTask}
                 editTaskDescription={editTaskDescription}
                 deleteTask={deleteTask}
             />
-        </React.Fragment>
+        </AppContext.Provider>
     )
 }
 
