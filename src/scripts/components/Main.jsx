@@ -2,9 +2,12 @@ import React from 'react'
 import Intro from './Intro'
 import Task from './Task'
 import { clientHeight } from '../utilities/common'
+import AppContext from '../context/AppContext'
 
 function Main(props) {
     const [mainStyles, setMainStyles] = React.useState({})
+
+    const appContext = React.useContext(AppContext)
 
     // Side effect to modify the main styles based on changing in the height of
     // window and header heights states.
@@ -34,18 +37,12 @@ function Main(props) {
     }
 
     let TasksElements = null
-    for (let i = 0; i < props.fields.fieldsArray.length; i++) {
-        let field = props.fields.fieldsArray[i]
-        if (field.fieldId == props.fields.activeFieldId) {
+    for (let i = 0; i < appContext.fields.fieldsArray.length; i++) {
+        let field = appContext.fields.fieldsArray[i]
+        if (field.fieldId == appContext.fields.activeFieldId) {
             TasksElements = field.fieldTasks.map(task => {
                 return (
-                    <Task
-                        activeFieldId={props.fields.activeFieldId}
-                        task={task}
-                        checkTask={props.checkTask}
-                        editTaskDescription={props.editTaskDescription}
-                        deleteTask={props.deleteTask}
-                    />
+                    <Task task={task} />
                 )
             })
             break
@@ -55,7 +52,7 @@ function Main(props) {
     return (
         <main style={mainStyles}>
             {
-                props.fields.activeFieldId == null ?
+                appContext.fields.activeFieldId == null ?
                     <Intro
                         message='Board is Empty! Press The Button Below to Add New Field'
                         handleClick={props.addField}
@@ -69,7 +66,7 @@ function Main(props) {
                                 TasksElements.length == 0 ?
                                     <Intro
                                         message='Field is Empty! Press The Button Below to Add New Task'
-                                        handleClick={() => props.addTask(props.fields.activeFieldId)}
+                                        handleClick={() => props.addTask(appContext.fields.activeFieldId)}
                                         btnId='main-add-task-btn'
                                         btnMessage='ADD NEW TASK'
                                     />
@@ -81,7 +78,7 @@ function Main(props) {
                         </div>
                         {
                             TasksElements.length != 0 &&
-                            <button onClick={() => props.addTask(props.fields.activeFieldId)} className='btn' id='main-add-task-btn'>ADD NEW TASK</button>
+                            <button onClick={() => props.addTask(appContext.fields.activeFieldId)} className='btn' id='main-add-task-btn'>ADD NEW TASK</button>
                         }
                     </React.Fragment>
             }

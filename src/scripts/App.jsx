@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid'
 import Header from './components/Header'
 import Main from './components/Main'
 import AppContext from './context/AppContext'
+import TaskContext from './context/TaskContext'
 
 function App() {
     // The 'fields' state will search the local storage to retrive the data,
@@ -104,7 +105,7 @@ function App() {
     }
 
     // Event handler will edit the field title based on the id.
-    function editFieldTitle(id) {
+    function editFieldTitle(fieldId) {
         const newFieldTitle = prompt('Enter New Title for Field')
         if (!newFieldTitle) {
             if (newFieldTitle == '') {
@@ -116,7 +117,7 @@ function App() {
             return {
                 ...preFields,
                 fieldsArray: preFields.fieldsArray.map(field => {
-                    if (field.fieldId == id) {
+                    if (field.fieldId == fieldId) {
                         return {
                             ...field,
                             fieldTitle: newFieldTitle
@@ -129,8 +130,8 @@ function App() {
     }
 
     // Event handler will delete the field which its id matches with the 
-    // 'id' parameter and update the active field status if needed.
-    function deleteField(id) {
+    // 'fieldId' parameter and update the active field status if needed.
+    function deleteField(fieldId) {
         setFields(prevFields => {
             let newFields = {
                 ...prevFields,
@@ -138,7 +139,7 @@ function App() {
             }
             let deletedFieldIndex = null
             for (let i = 0; i < prevFields.fieldsArray.length; i++) {
-                if (id == prevFields.fieldsArray[i].fieldId) {
+                if (prevFields.fieldsArray[i].fieldId == fieldId) {
                     deletedFieldIndex = i
                     continue
                 }
@@ -147,7 +148,7 @@ function App() {
             if (newFields.fieldsArray.length == 0) {
                 newFields.activeFieldId = null
             }
-            else if (newFields.activeFieldId == id) {
+            else if (newFields.activeFieldId == fieldId) {
                 if (deletedFieldIndex == 0) {
                     newFields.activeFieldId = newFields.fieldsArray[0].fieldId
                 }
@@ -163,18 +164,18 @@ function App() {
     }
 
     // Event handler will switch the field which its id matches with the 
-    // 'id' parameter to an active field.
-    function switchField(id) {
+    // 'fieldId' parameter, to an active field.
+    function switchField(fieldId) {
         setFields(prevFields => {
             return {
                 ...prevFields,
-                activeFieldId: id
+                activeFieldId: fieldId
             }
         })
     }
 
     // Event handler will add task to a field based on the passed field id.
-    function addTask(id) {
+    function addTask(fieldId) {
         const newTaskDescription = prompt('Enter Task Description')
         if (!newTaskDescription) {
             if (newTaskDescription == '') {
@@ -186,7 +187,7 @@ function App() {
             return {
                 ...prevFields,
                 fieldsArray: prevFields.fieldsArray.map(field => {
-                    if (field.fieldId == id) {
+                    if (field.fieldId == fieldId) {
                         return {
                             ...field,
                             fieldTasks: [
@@ -278,23 +279,20 @@ function App() {
     }
 
     return (
-        <AppContext.Provider value={{ theme: theme }}>
+        <AppContext.Provider value={{ fields: fields, theme: theme }}>
             <Header
-                fields={fields}
                 switchTheme={switchTheme}
                 addField={addField}
                 deleteField={deleteField}
                 editFieldTitle={editFieldTitle}
                 switchField={switchField}
             />
-            <Main
-                fields={fields}
-                addField={addField}
-                addTask={addTask}
-                checkTask={checkTask}
-                editTaskDescription={editTaskDescription}
-                deleteTask={deleteTask}
-            />
+            <TaskContext.Provider value={{ checkTask: checkTask, editTaskDescription: editTaskDescription, deleteTask: deleteTask }}>
+                <Main
+                    addField={addField}
+                    addTask={addTask}
+                />
+            </TaskContext.Provider>
         </AppContext.Provider>
     )
 }

@@ -23,19 +23,19 @@ function Header(props) {
         })
     }
 
-    const fieldsTabElements = props.fields.fieldsArray.map(field => {
+    const fieldsTabElements = appContext.fields.fieldsArray.map(field => {
         let styles = {
             backgroundColor: appContext.theme == 'light' ? 
-            (field.fieldId == props.fields.activeFieldId ? '#a39081' : '#d6a692')
+            (field.fieldId == appContext.fields.activeFieldId ? '#a39081' : '#d6a692')
             :
-            (field.fieldId == props.fields.activeFieldId ? '#2a2a40' : '#59596b')
+            (field.fieldId == appContext.fields.activeFieldId ? '#2a2a40' : '#59596b')
         }
 
         return (
             <div style={styles} className='field-tab'>
                 <h2 onClick={() => props.switchField(field.fieldId)} title={`Switch to ${field.fieldTitle}`} className='field-title'>{field.fieldTitle}</h2>
                 {
-                    field.fieldId == props.fields.activeFieldId &&
+                    field.fieldId == appContext.fields.activeFieldId &&
                     <button onClick={() => props.editFieldTitle(field.fieldId)} title='Edit Field Title' className='btn'>
                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" viewBox="0 0 24 24" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -85,7 +85,7 @@ function Header(props) {
             <div onWheel={(event) => scrollFieldTabs(event)} onTouchStart={event => startTouchFieldTabs(event)} onTouchMove={event => moveTouchFieldTabs(event)} className='field-tabs'>
                 {fieldsTabElements}
                 {
-                    props.fields.activeFieldId
+                    appContext.fields.activeFieldId
                     &&
                     <button onClick={props.addField} title='Add New Field' className='btn'>
                         <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-plus" viewBox="0 0 24 24" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
