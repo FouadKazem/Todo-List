@@ -2,39 +2,27 @@ import React from 'react'
 import { nanoid } from 'nanoid'
 import Header from './components/Header'
 import Main from './components/Main'
+import AppContext from './context/AppContext'
+import TaskContext from './context/TaskContext'
 
 function App() {
     // The 'fields' state will search the local storage to retrive the data,
     // If there are no such data in the local storage it will assign the
     // object next to the or operator.
     const [fields, setFields] = React.useState(() => {
-        return JSON.parse(localStorage.getItem('fields')) || { fieldsArray: [], activeFieldId: null, theme: 'light' }
+        return JSON.parse(localStorage.getItem('fields')) || { fieldsArray: [], activeFieldId: null }
     })
-    const [windowHeight, setWindowHeight] = React.useState(0)
-    const [headerHeight, setHeaderHeight] = React.useState(0)
-    const [mainStyles, setMainStyles] = React.useState({})
+    // State to control the theme of the website.
+    const [theme, setTheme] = React.useState(() => localStorage.getItem('theme') || 'light')
+
+    // Side Effect to reshape the localStorage data.
+    React.useEffect(() => {
+        delete fields.theme
+    }, [])
 
     // Side effect will only run if the fields object changed, it saves the
     // current fields data to the local storage.
     React.useEffect(() => localStorage.setItem('fields', JSON.stringify(fields)), [fields])
-
-    // Side Effect to listen to change of the size of the window and the header.
-    React.useEffect(() => {
-        window.addEventListener('resize', () => {
-            setWindowHeight(window.innerHeight)
-        })
-        new ResizeObserver(() => {
-            setHeaderHeight(document.querySelector('header').clientHeight)
-        }).observe(document.querySelector('header'))
-    }, [])
-
-    // Side effect to modify the main styles based on changing in the height of
-    // window and header heights states.
-    React.useEffect(() => {
-        setMainStyles({
-            height: `${windowHeight - headerHeight}px`
-        })
-    }, [windowHeight, headerHeight])
 
     // Side effect to handle the change of theme.
     React.useEffect(() => {
@@ -45,7 +33,7 @@ function App() {
         }
         const themeStyle = document.createElement('style')
         themeStyle.className = 'theme-style'
-        if (fields.theme == 'light') {
+        if (theme == 'light') {
             themeStyle.innerHTML = `
                 * { color: #292522; }
                 svg { stroke: #292522; }
@@ -82,16 +70,12 @@ function App() {
         }
         themeStyle.innerHTML = themeStyle.innerHTML.split('').filter(char => char != ' ' && char != '\n').join('')
         head.append(themeStyle)
-    }, [fields.theme])
+        localStorage.setItem('theme', theme)
+    }, [theme])
 
     // Event handler will change the theme from light to dark and vice versa.
     function switchTheme() {
-        setFields(prevFields => {
-            return {
-                ...prevFields,
-                theme: prevFields.theme == 'light' ? 'dark' : 'light'
-            }
-        })
+        setTheme(prevTheme => prevTheme == 'light' ? 'dark' : 'light')
     }
 
     // Event handler will create new field and add it to the end of array.
@@ -121,7 +105,7 @@ function App() {
     }
 
     // Event handler will edit the field title based on the id.
-    function editFieldTitle(id) {
+    function editFieldTitle(fieldId) {
         const newFieldTitle = prompt('Enter New Title for Field')
         if (!newFieldTitle) {
             if (newFieldTitle == '') {
@@ -133,7 +117,7 @@ function App() {
             return {
                 ...preFields,
                 fieldsArray: preFields.fieldsArray.map(field => {
-                    if (field.fieldId == id) {
+                    if (field.fieldId == fieldId) {
                         return {
                             ...field,
                             fieldTitle: newFieldTitle
@@ -146,8 +130,8 @@ function App() {
     }
 
     // Event handler will delete the field which its id matches with the 
-    // 'id' parameter and update the active field status if needed.
-    function deleteField(id) {
+    // 'fieldId' parameter and update the active field status if needed.
+    function deleteField(fieldId) {
         setFields(prevFields => {
             let newFields = {
                 ...prevFields,
@@ -155,7 +139,7 @@ function App() {
             }
             let deletedFieldIndex = null
             for (let i = 0; i < prevFields.fieldsArray.length; i++) {
-                if (id == prevFields.fieldsArray[i].fieldId) {
+                if (prevFields.fieldsArray[i].fieldId == fieldId) {
                     deletedFieldIndex = i
                     continue
                 }
@@ -164,7 +148,7 @@ function App() {
             if (newFields.fieldsArray.length == 0) {
                 newFields.activeFieldId = null
             }
-            else if (newFields.activeFieldId == id) {
+            else if (newFields.activeFieldId == fieldId) {
                 if (deletedFieldIndex == 0) {
                     newFields.activeFieldId = newFields.fieldsArray[0].fieldId
                 }
@@ -180,18 +164,18 @@ function App() {
     }
 
     // Event handler will switch the field which its id matches with the 
-    // 'id' parameter to an active field.
-    function switchField(id) {
+    // 'fieldId' parameter, to an active field.
+    function switchField(fieldId) {
         setFields(prevFields => {
             return {
                 ...prevFields,
-                activeFieldId: id
+                activeFieldId: fieldId
             }
         })
     }
 
     // Event handler will add task to a field based on the passed field id.
-    function addTask(id) {
+    function addTask(fieldId) {
         const newTaskDescription = prompt('Enter Task Description')
         if (!newTaskDescription) {
             if (newTaskDescription == '') {
@@ -203,7 +187,7 @@ function App() {
             return {
                 ...prevFields,
                 fieldsArray: prevFields.fieldsArray.map(field => {
-                    if (field.fieldId == id) {
+                    if (field.fieldId == fieldId) {
                         return {
                             ...field,
                             fieldTasks: [
@@ -295,25 +279,21 @@ function App() {
     }
 
     return (
-        <React.Fragment>
+        <AppContext.Provider value={{ fields: fields, theme: theme }}>
             <Header
-                fields={fields}
                 switchTheme={switchTheme}
                 addField={addField}
                 deleteField={deleteField}
                 editFieldTitle={editFieldTitle}
                 switchField={switchField}
             />
-            <Main
-                fields={fields}
-                addField={addField}
-                addTask={addTask}
-                checkTask={checkTask}
-                editTaskDescription={editTaskDescription}
-                deleteTask={deleteTask}
-                mainStyles={mainStyles}
-            />
-        </React.Fragment>
+            <TaskContext.Provider value={{ checkTask: checkTask, editTaskDescription: editTaskDescription, deleteTask: deleteTask }}>
+                <Main
+                    addField={addField}
+                    addTask={addTask}
+                />
+            </TaskContext.Provider>
+        </AppContext.Provider>
     )
 }
 

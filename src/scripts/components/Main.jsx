@@ -1,7 +1,22 @@
 import React from 'react'
+import Intro from './Intro'
 import Task from './Task'
+import { clientHeight } from '../utilities/common'
+import AppContext from '../context/AppContext'
 
 function Main(props) {
+    const [mainStyles, setMainStyles] = React.useState({})
+
+    const appContext = React.useContext(AppContext)
+
+    // Side effect to modify the main styles based on changing in the height of
+    // window and header heights states.
+    React.useEffect(() => {
+        setMainStyles({
+            height: `${window.innerHeight - clientHeight('header')}px`
+        })
+    }, [window.innerHeight, clientHeight('header')])
+
     let startClientY = 0
 
     function startTouchField(event) {
@@ -22,19 +37,12 @@ function Main(props) {
     }
 
     let TasksElements = null
-    for (let i = 0; i < props.fields.fieldsArray.length; i++) {
-        let field = props.fields.fieldsArray[i]
-        if (field.fieldId == props.fields.activeFieldId) {
+    for (let i = 0; i < appContext.fields.fieldsArray.length; i++) {
+        let field = appContext.fields.fieldsArray[i]
+        if (field.fieldId == appContext.fields.activeFieldId) {
             TasksElements = field.fieldTasks.map(task => {
                 return (
-                    <Task
-                        theme={props.fields.theme}
-                        activeFieldId={props.fields.activeFieldId}
-                        task={task}
-                        checkTask={props.checkTask}
-                        editTaskDescription={props.editTaskDescription}
-                        deleteTask={props.deleteTask}
-                    />
+                    <Task task={task} />
                 )
             })
             break
@@ -42,22 +50,26 @@ function Main(props) {
     }
 
     return (
-        <main style={props.mainStyles}>
+        <main style={mainStyles}>
             {
-                props.fields.activeFieldId == null ?
-                    <div className='intro'>
-                        <h1>Board is Empty! Press The Button Below to Add New Field</h1>
-                        <button onClick={props.addField} className='btn' id='main-add-field-btn'>ADD NEW FIELD</button>
-                    </div>
+                appContext.fields.activeFieldId == null ?
+                    <Intro
+                        message='Board is Empty! Press The Button Below to Add New Field'
+                        handleClick={props.addField}
+                        btnId='main-add-field-btn'
+                        btnMessage='ADD NEW FIELD'
+                    />
                     :
                     <React.Fragment>
                         <div onWheel={(event) => scrollField(event)} onTouchStart={event => startTouchField(event)} onTouchMove={event => moveTouchField(event)} className='field'>
                             {
                                 TasksElements.length == 0 ?
-                                    <div className='intro'>
-                                        <h1>Field is Empty! Press The Button Below to Add New Task</h1>
-                                        <button onClick={() => props.addTask(props.fields.activeFieldId)} className='btn' id='main-add-task-btn'>ADD NEW TASK</button>
-                                    </div>
+                                    <Intro
+                                        message='Field is Empty! Press The Button Below to Add New Task'
+                                        handleClick={() => props.addTask(appContext.fields.activeFieldId)}
+                                        btnId='main-add-task-btn'
+                                        btnMessage='ADD NEW TASK'
+                                    />
                                     :
                                     <React.Fragment>
                                         {TasksElements}
@@ -66,7 +78,7 @@ function Main(props) {
                         </div>
                         {
                             TasksElements.length != 0 &&
-                            <button onClick={() => props.addTask(props.fields.activeFieldId)} className='btn' id='main-add-task-btn'>ADD NEW TASK</button>
+                            <button onClick={() => props.addTask(appContext.fields.activeFieldId)} className='btn' id='main-add-task-btn'>ADD NEW TASK</button>
                         }
                     </React.Fragment>
             }
