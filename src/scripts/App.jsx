@@ -279,7 +279,7 @@ function App() {
     }
 
     return (
-        <AppContext.Provider value={{ fields: fields, theme: theme }}>
+        <AppContext.Provider value={{ fields, theme }}>
             <Header
                 switchTheme={switchTheme}
                 addField={addField}
@@ -287,7 +287,7 @@ function App() {
                 editFieldTitle={editFieldTitle}
                 switchField={switchField}
             />
-            <TaskContext.Provider value={{ checkTask: checkTask, editTaskDescription: editTaskDescription, deleteTask: deleteTask }}>
+            <TaskContext.Provider value={{ checkTask, editTaskDescription, deleteTask }}>
                 <Main
                     addField={addField}
                     addTask={addTask}
