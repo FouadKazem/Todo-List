@@ -1,24 +1,27 @@
 import React from 'react'
+import { HeaderProps } from '../interfaces'
 import AppContext from '../context/AppContext'
 
-function Header(props) {
+function Header(props: HeaderProps) {
     const appContext = React.useContext(AppContext)
 
     let startClientX = 0
 
-    function startTouchFieldTabs(event) {
+    function startTouchFieldTabs(event: React.TouchEvent) {
         startClientX = event.touches[0].clientX
     }
 
-    function moveTouchFieldTabs(event) {
-        document.querySelector('.field-tabs').scrollBy({
+    function moveTouchFieldTabs(event: React.TouchEvent) {
+        const fieldTabsElement = document.querySelector('.field-tabs') as Element
+        fieldTabsElement.scrollBy({
             left: startClientX - event.touches[0].clientX,
         })
         startClientX = event.touches[0].clientX
     }
 
-    function scrollFieldTabs(event) {
-        document.querySelector('.field-tabs').scrollBy({
+    function scrollFieldTabs(event: React.WheelEvent) {
+        const fieldTabsElement = document.querySelector('.field-tabs') as Element
+        fieldTabsElement.scrollBy({
             left: event.deltaY < 0 ? -30 : 30,
         })
     }

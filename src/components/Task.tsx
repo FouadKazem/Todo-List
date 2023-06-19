@@ -1,8 +1,9 @@
 import React from 'react'
+import { TaskProps } from '../interfaces'
 import AppContext from '../context/AppContext'
 import TaskContext from '../context/TaskContext'
 
-function Task(props) {
+function Task(props: TaskProps) {
     const appContext = React.useContext(AppContext)
     const taskContext = React.useContext(TaskContext)
 
@@ -18,7 +19,7 @@ function Task(props) {
         <div className='task'>
             <h2 className='task-description'>{props.task.taskDescription}</h2>
             <div style={controlBtnsStyle} className='control-btns'>
-                <button onClick={() => taskContext.checkTask(appContext.fields.activeFieldId, props.task.taskId)} title={`Mark task as ${!props.task.taskStatus ? 'Done' : 'Undone'}`}>
+                <button onClick={() => taskContext.checkTask(appContext.fields.activeFieldId as string, props.task.taskId)} title={`Mark task as ${!props.task.taskStatus ? 'Done' : 'Undone'}`}>
                     {
                         !props.task.taskStatus ?
                             <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle" viewBox="0 0 24 24" strokeWidth="2" fill={appContext.theme == 'light' ? "#a39081" : "#383845"} strokeLinecap="round" strokeLinejoin="round">
@@ -33,7 +34,7 @@ function Task(props) {
                             </svg>
                     }
                 </button>
-                <button onClick={() => taskContext.editTaskDescription(appContext.fields.activeFieldId, props.task.taskId)} title='Edit Task Description'>
+                <button onClick={() => taskContext.editTaskDescription(appContext.fields.activeFieldId as string, props.task.taskId)} title='Edit Task Description'>
                     <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-edit" viewBox="0 0 24 24" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M9 7h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3" />
@@ -41,7 +42,7 @@ function Task(props) {
                         <line x1="16" y1="5" x2="19" y2="8" />
                     </svg>
                 </button>
-                <button onClick={() => taskContext.deleteTask(appContext.fields.activeFieldId, props.task.taskId)} title='Delete Task' className='btn'>
+                <button onClick={() => taskContext.deleteTask(appContext.fields.activeFieldId as string, props.task.taskId)} title='Delete Task' className='btn'>
                     <svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-trash-x" viewBox="0 0 24 24" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                         <path d="M4 7h16" />

@@ -1,6 +1,7 @@
 import React from 'react'
+import { IntroProps } from '../interfaces'
 
-function Intro(props) {
+function Intro(props: IntroProps) {
     return (
         <div className='intro'>
             <h1>{props.message}</h1>
