@@ -1,35 +1,29 @@
 import React from 'react'
 import { nanoid } from 'nanoid'
+import { Fields } from './interfaces'
 import Header from './components/Header'
 import Main from './components/Main'
 import AppContext from './context/AppContext'
 import TaskContext from './context/TaskContext'
 
 function App() {
-    // The 'fields' state will search the local storage to retrive the data,
-    // If there are no such data in the local storage it will assign the
-    // object next to the or operator.
-    const [fields, setFields] = React.useState(() => {
-        return JSON.parse(localStorage.getItem('fields')) || { fieldsArray: [], activeFieldId: null }
+    const [fields, setFields] = React.useState((): Fields => {
+        const localData = localStorage.getItem('fields')
+        return localData ? JSON.parse(localData) : { fieldsArray: [], activeFieldId: null }
     })
-    // State to control the theme of the website.
-    const [theme, setTheme] = React.useState(() => localStorage.getItem('theme') || 'light')
+    const [theme, setTheme] = React.useState((): string => {
+        return localStorage.getItem('theme') || 'light'
+    })
+    
+    React.useEffect((): void => {
+        localStorage.setItem('fields', JSON.stringify(fields))
+    }, [fields])
 
-    // Side Effect to reshape the localStorage data.
-    React.useEffect(() => {
-        delete fields.theme
-    }, [])
-
-    // Side effect will only run if the fields object changed, it saves the
-    // current fields data to the local storage.
-    React.useEffect(() => localStorage.setItem('fields', JSON.stringify(fields)), [fields])
-
-    // Side effect to handle the change of theme.
-    React.useEffect(() => {
+    React.useEffect((): void => {
         const head = document.querySelector('head')
         const oldThemeStyle = document.querySelector('.theme-style')
         if (oldThemeStyle) {
-            head.removeChild(oldThemeStyle)
+            head?.removeChild(oldThemeStyle)
         }
         const themeStyle = document.createElement('style')
         themeStyle.className = 'theme-style'
@@ -69,17 +63,15 @@ function App() {
             `
         }
         themeStyle.innerHTML = themeStyle.innerHTML.split('').filter(char => char != ' ' && char != '\n').join('')
-        head.append(themeStyle)
+        head?.append(themeStyle)
         localStorage.setItem('theme', theme)
     }, [theme])
 
-    // Event handler will change the theme from light to dark and vice versa.
-    function switchTheme() {
+    function switchTheme(): void {
         setTheme(prevTheme => prevTheme == 'light' ? 'dark' : 'light')
     }
 
-    // Event handler will create new field and add it to the end of array.
-    function addField() {
+    function addField(): void {
         const newFieldTitle = prompt('Enter Title for the New Field')
         if (!newFieldTitle) {
             if (newFieldTitle == '') {
@@ -104,8 +96,7 @@ function App() {
         })
     }
 
-    // Event handler will edit the field title based on the id.
-    function editFieldTitle(fieldId) {
+    function editFieldTitle(fieldId: string): void {
         const newFieldTitle = prompt('Enter New Title for Field')
         if (!newFieldTitle) {
             if (newFieldTitle == '') {
@@ -129,15 +120,13 @@ function App() {
         })
     }
 
-    // Event handler will delete the field which its id matches with the 
-    // 'fieldId' parameter and update the active field status if needed.
-    function deleteField(fieldId) {
+    function deleteField(fieldId: string): void {
         setFields(prevFields => {
-            let newFields = {
+            let newFields: Fields = {
                 ...prevFields,
                 fieldsArray: []
             }
-            let deletedFieldIndex = null
+            let deletedFieldIndex = -1
             for (let i = 0; i < prevFields.fieldsArray.length; i++) {
                 if (prevFields.fieldsArray[i].fieldId == fieldId) {
                     deletedFieldIndex = i
@@ -163,9 +152,7 @@ function App() {
         })
     }
 
-    // Event handler will switch the field which its id matches with the 
-    // 'fieldId' parameter, to an active field.
-    function switchField(fieldId) {
+    function switchField(fieldId: string): void {
         setFields(prevFields => {
             return {
                 ...prevFields,
@@ -174,8 +161,7 @@ function App() {
         })
     }
 
-    // Event handler will add task to a field based on the passed field id.
-    function addTask(fieldId) {
+    function addTask(fieldId: string): void {
         const newTaskDescription = prompt('Enter Task Description')
         if (!newTaskDescription) {
             if (newTaskDescription == '') {
@@ -206,8 +192,7 @@ function App() {
         })
     }
 
-    // Event handler will switch a task from done to undone and vic versa,
-    function checkTask(fieldId, taskId) {
+    function checkTask(fieldId: string, taskId: string): void {
         setFields(prevFields => {
             return {
                 ...prevFields,
@@ -226,8 +211,7 @@ function App() {
         })
     }
 
-    // Event handler will edit task description.
-    function editTaskDescription(fieldId, taskId) {
+    function editTaskDescription(fieldId: string, taskId: string): void {
         const newTaskDescription = prompt('Enter New Description for The Task')
         if (!newTaskDescription) {
             if (newTaskDescription == '') {
@@ -259,8 +243,7 @@ function App() {
         })
     }
 
-    // Event handler will delete task based on field id and task id.
-    function deleteTask(fieldId, taskId) {
+    function deleteTask(fieldId: string, taskId: string): void {
         setFields(prevFields => {
             return {
                 ...prevFields,

@@ -3,12 +3,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
 
+const NODE_ENV = process.env.NODE_ENV
+
 module.exports = {
-    mode: 'production',
-    entry: './src/scripts/index.js',
+    mode: NODE_ENV,
+    devtool: NODE_ENV == 'development' ? 'source-map' : undefined,
+    entry: './src/index.tsx',
     output: {
         filename: 'index.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.join(__dirname, NODE_ENV == 'production' ? 'dist' : 'test'),
         assetModuleFilename: 'assets/[hash][ext][query]',
     },
     module: {
@@ -20,12 +23,12 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    NODE_ENV == 'production' ? MiniCssExtractPlugin.loader : 'style-loader',
                     'css-loader',
                 ],
             },
             {
-                test: /\.jsx?$/,
+                test: /\.(js|jsx)$/,
                 use: {
                     loader: 'babel-loader',
                     options: {
@@ -34,16 +37,18 @@ module.exports = {
                 },
                 exclude: /node_modules/,
             },
+            {
+                test: /\.(ts|tsx)$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
         ],
     },
     resolve: {
-        extensions: [".js", ".jsx"],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
     },
     optimization: {
-        minimizer: [
-            '...',
-            new CssMinimizerPlugin(),
-        ],
+        minimizer: ['...'].concat(NODE_ENV == 'production' ? new CssMinimizerPlugin() : []),
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -55,4 +60,18 @@ module.exports = {
             filename: 'index.css',
         }),
     ],
+    devServer: NODE_ENV == 'development' ? {
+        static: {
+            directory: path.join(__dirname, 'test')
+        }, 
+        port: 3000,
+        open: true,
+        hot: true,
+        historyApiFallback: {
+            index: 'index.html',
+        },
+        devMiddleware: {
+            writeToDisk: true,
+        },
+    } : undefined,
 }
